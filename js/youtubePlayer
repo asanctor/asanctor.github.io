@@ -1,0 +1,90 @@
+/*Subscriber Active Component
+* Requirements from UI:
+*	chat area
+* Parameters (Requirements from user):
+*	nameChannel: the name of your channel without spaces!!
+* Required libraries:
+* 	<script src="https://cdn.pubnub.com/sdk/javascript/pubnub.4.12.0.js"></script>
+*/
+
+var YouTubePlayer = class YouTubePlayer {
+
+    constructor(playerPara) {
+        // search for right parameter in parameter array
+        for(var l = 0; l < playerPara.length; l++){
+            if(playerPara[l].name == "playerName"){
+                this.name = playerPara[l].value;
+            } else if(playerPara[l].name == "playerUrl"){ //for now url is just videoID, later we can split string to get that id from an actual url
+                this.url = playerPara[l].value;
+            }
+        }
+
+        this.box;
+        this.player;
+
+        if(this.name == null){
+            this.name = "YTPlayer1";
+        }
+
+    }
+
+    //player functionality should be linked to an area UI
+    //following function takes the id of this area UI component and link it to functionality
+    initialise(uiPara) {
+
+        var self = this;
+
+        // 2. This code loads the IFrame Player API code asynchronously.
+        var tag = document.createElement('script');
+
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+        // search for right parameter in parameter array being the area and input
+        for(var m = 0; m < uiPara.length; m++){
+            if(uiPara[m].name == "area"){
+                self.box = uiPara[m].value;
+            }
+        }
+
+
+        window.onYouTubeIframeAPIReady = function() {
+            self.player = new YT.Player(self.box, {
+                height: '390',
+                width: '640',
+                videoId: self.url,
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        };
+
+        // The API will call this function when the video player is ready.
+        function onPlayerReady(event) {
+            event.target.playVideo();
+        }
+
+        function onPlayerStateChange(event) {
+            /*-1 – unstarted
+            0 – ended
+            1 – playing
+            2 – paused
+            3 – buffering
+            5 – video cued
+            */
+            //when user goes to other position it is also seen as paused for a while
+            if(event.data == 2){
+                console.log("paused");
+                console.log(self.player.getCurrentTime());
+            }
+            if(event.data == 1){
+                console.log("playing");
+            }
+            if(event.data == 3){
+                console.log("buffering");
+            }
+        }
+    }
+}

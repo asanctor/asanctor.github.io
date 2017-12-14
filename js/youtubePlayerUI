@@ -1,0 +1,67 @@
+/*Subscriber UI Component
+* Provides:
+*	chat area called "box"+channelname
+* Parameters:
+*	namePlayer: the name of your player
+*/
+function YouTubePlayerUI(playerPara) {
+
+    // search for right parameter in parameter array
+    for(var l = 0; l < playerPara.length; l++){
+        if(playerPara[l].name == "PlayerName"){
+            this.name = playerPara[l].value;
+        }
+    }
+
+    if(this.name == null){
+        this.name = "Player1";
+    }
+
+
+    //field that should be linked to some functionality
+    this.area = "box" + this.name;
+
+}
+
+YouTubePlayerUI.prototype.displayUI = function(){
+
+    //TODO: see if this should not be in the AC part
+    // This code loads the IFrame Player API code asynchronously.
+    var tag = document.createElement('script');
+
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    var newDiv = document.createElement("div");
+    newDiv.setAttribute("id", "player"+this.name);
+    newDiv.setAttribute("class", "panel panel-primary");
+
+    var innerDiv1 = document.createElement("div");
+    innerDiv1.setAttribute("class", "panel-heading");
+    innerDiv1.setAttribute("id", "player"+this.name+"heading");
+    var span = document.createElement("span");
+    span.setAttribute("class", "glyphicon glyphicon-play")
+
+    var innerContent1 = document.createTextNode(" " + this.name);
+
+    span.appendChild(innerContent1);
+    innerDiv1.appendChild(span);
+
+    var innerDiv2 = document.createElement("div");
+    innerDiv2.setAttribute("class", "panel-body");
+    var innerInnerDiv2 = document.createElement("div");
+    innerInnerDiv2.setAttribute("id", "box"+this.name);
+
+    innerDiv2.appendChild(innerInnerDiv2);
+
+    newDiv.appendChild(innerDiv1);
+    newDiv.appendChild(innerDiv2);
+
+    document.body.appendChild(newDiv);
+    $("#player"+this.name).draggable({cancel:false, handle:'#player'+this.name+'heading'});
+    //only horizontaly resizable
+    $("#player"+this.name).resizable({grid: [1, 10000]});
+}
+
+
