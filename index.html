@@ -70,6 +70,9 @@
 			<p class="lead">Use this website to play with the existing active components. Pick one from the spinner below and select your favorite UI component to link the UI to the active component's functionality.</p>
 			<p id="connStatus">Waiting to connect to server...</p>
 		</div>
+		<div>
+			<button id="but" onclick="ble()">BLE</button>
+		</div>
 		
 		
 
@@ -79,11 +82,14 @@
 <script type="text/javascript">
 
 	var opt = { filters: [ { services: ['generic_access'] } ] };
-
-	navigator.bluetooth.requestDevice(opt).then(
-		function(d) { console.log("found a device", d); },
-		function(e) { console.error(e); }
-	);
+	
+	function ble() {
+		navigator.bluetooth.requestDevice(opt).then(
+			function(d) { console.log("found a device", d); },
+			function(e) { console.error(e); }
+		);
+	}
+	
 
 
   </script>
